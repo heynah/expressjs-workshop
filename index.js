@@ -67,7 +67,7 @@ function op(operator, number1, number2) {
 function buildHtml(contentsArray){
   var html = 
   `<div id="contents">
-    <h2><a href="https://day16-expressjs-heynah.c9users.io/createContent">Add a New Post! </a></h2>;
+    <h2><a href="https://day16-expressjs-heynah.c9users.io/createContent">Add a New Post! </a></h2>
     <h1>List of contents</h1>
       <ul class="contents-list">`
   contentsArray.forEach(function(item){
