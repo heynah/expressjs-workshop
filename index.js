@@ -4,6 +4,7 @@ app.set('json spaces', 2);
 var Sequelize = require('sequelize');
 
 var mysql = require('mysql');
+var bodyParser = require('body-parser');
 
 var reddit = new Sequelize('reddit','heynah', '', {dialect: 'mysql'});
 
@@ -66,6 +67,7 @@ function op(operator, number1, number2) {
 function buildHtml(contentsArray){
   var html = 
   `<div id="contents">
+    <h2><a href="https://day16-expressjs-heynah.c9users.io/createContent">Add a New Post! </a></h2>;
     <h1>List of contents</h1>
       <ul class="contents-list">`
   contentsArray.forEach(function(item){
@@ -151,6 +153,64 @@ app.get('/createContent', function(req, res, next) {
       console.log('Sent:', fileName);
     }
   });*/
+
+
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
+
+app.post('/createContent', function(req, res) {
+  var url = req.body.url;
+  var title = req.body.title;
+  
+  Post.create({url: url, title: title, userId:1});
+  res.redirect('/contents');
+});
+
+
+/*User.create({
+  username: 'john-doe',
+  password: generatePasswordHash('i-am-so-great')
+}).then(function(user) {
+  /* ... */
+/*})*/
+/*var url
+var title
+create content {url: req.body.url})*/
+
+/*app.use(bodyParser.json())
+
+app.use(function (req, res) {
+  res.setHeader('Content-Type', 'text/plain')
+  res.write('you posted:\n')
+  res.end(JSON.stringify(req.body, null, 2))
+})*/
+
+
+/*express route-specific
+
+This example demonstrates adding body parsers specifically to the routes that need them. In general, this is the most recommend way to use body-parser with express.
+
+// create application/json parser
+
+
+// create application/x-www-form-urlencoded parser
+var urlencodedParser = bodyParser.urlencoded({ extended: false })
+
+// POST /login gets urlencoded bodies
+app.post('/login', urlencodedParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  res.send('welcome, ' + req.body.username)
+})
+
+// POST /api/users gets JSON bodies
+app.post('/api/users', jsonParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  // create user in req.body
+})*/
+
+
+
+
 
 
 
