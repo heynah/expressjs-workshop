@@ -115,6 +115,45 @@ app.get('/contents', function(req, res) {
     
 });
 
+app.get('/createContent', function(req, res, next) {
+    var options = {
+      root: __dirname
+    };
+   
+    res.sendFile("form.html", options) /*, function (err) {
+    if (err) {
+      console.log(err);
+      res.status(err.status).end();
+    }
+    else {
+      console.log('Sent:', fileName);
+    }*/
+  });
+//})
+
+
+  /*var options = {
+    root: __dirname + '/public/',
+    dotfiles: 'deny',
+    headers: {
+        'x-timestamp': Date.now(),
+        'x-sent': true
+    }
+  };
+
+  var fileName = req.params.name;
+  res.sendFile(fileName, options, function (err) {
+    if (err) {
+      console.log(err);
+      res.status(err.status).end();
+    }
+    else {
+      console.log('Sent:', fileName);
+    }
+  });*/
+
+
+
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
 
 // Boilerplate code to start up the web server
@@ -127,4 +166,4 @@ var server = app.listen(process.env.PORT, process.env.IP, function () {
 
 
 // retrieveTop5(function(res){return res});
-retrieveTop5(function(res){console.log(res)});
+//retrieveTop5(function(res){console.log(res)});
