@@ -1,43 +1,14 @@
-var express = require('express');
+var express = require('express');             //libraries, project modules
 var app = express();
 app.set('json spaces', 2);
-var Sequelize = require('sequelize');
-
+var db = require("./models/index.js")
 var mysql = require('mysql');
 var bodyParser = require('body-parser');
 
-var reddit = new Sequelize('reddit','heynah', '', {dialect: 'mysql'});
+var Models = require('./models/index');
+//Models.user, Models.content, Models.vote  => Models."model title"
 
-/*var connection = mysql.createConnection({
-  host     : process.env.IP,
-  user     : process.env.C9_USER,
-  password : '',
-  database : 'reddit'
-});
 
-connection.query("SELECT Account.id, AddressBook.accountId, Account.email, AddressBook.name FROM Account LEFT JOIN AddressBook on Account.id=AddressBook.accountId", 
-function(err, rows){
-}*/
-
-var User = reddit.define('user', {
-    username: Sequelize.STRING,
-    screenName: Sequelize.STRING,
-    password: Sequelize.STRING});
-               //^ table,  feild definitions,table -- telling library about user table, knows ids!
-var Post = reddit.define('content', {
-    url: Sequelize.STRING,
-    title: Sequelize.STRING
-});
-var Vote = reddit.define('vote', {
-    upVote: Sequelize.BOOLEAN
-});
-// var Content = reddit.define('
-Post.belongsTo(User); //{foreignKey:'userId'});
-//                     // can connect children tables to parents *using Sequelizes defaults
-User.hasMany(Post);
-
-User.belongsToMany(Post, {through: Vote, as: "Upvotes"});
-Post.belongsToMany(User, {through: Vote});
 
 
 function op(operator, number1, number2) {
@@ -85,10 +56,10 @@ return html;
 }
 
 function retrieveTop5(callback) {
-  Post.findAll({
+  Models.content.findAll({
   order: [['createdAt','DESC']],
   limit: 5,
-  include: User
+  include: Models.user
   }).then(function(res) {
     callback(res);
 });
@@ -161,13 +132,16 @@ app.use(bodyParser.json())
 app.post('/createContent', function(req, res) {
   var url = req.body.url;
   var title = req.body.title;
-  
-  Post.create({url: url, title: title, userId:1});
-  res.redirect('/contents');
+  console.log("THIS IS IT")
+  Models.content.create({url: url, title: title, userId:1}).then(function (user) {
+    
+    res.redirect("/contents")
+  })
+  // res.send(req.body);
 });
 
 
-/*User.create({
+/*Models.user.create({
   username: 'john-doe',
   password: generatePasswordHash('i-am-so-great')
 }).then(function(user) {
@@ -215,14 +189,17 @@ app.post('/api/users', jsonParser, function (req, res) {
 
 
 /* YOU DON'T HAVE TO CHANGE ANYTHING BELOW THIS LINE :) */
-
-// Boilerplate code to start up the web server
+db.sequelize.sync().then(function () {
+  // Boilerplate code to start up the web server
 var server = app.listen(process.env.PORT, process.env.IP, function () {
   var host = server.address().address;
   var port = server.address().port;
 
   console.log('Example app listening at http://%s:%s', host, port);
 });
+})
+
+
 
 
 // retrieveTop5(function(res){return res});
